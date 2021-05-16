@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import urllib.request
 
 start = time.time()
 i = 0
@@ -17,6 +18,8 @@ def total_num(all_item_url):
 
 # 크롤링
 def crawling(soup):
+    global i
+    j = 0
     infos = soup.find_all("li", class_='c-product-tile')
     for info in infos:
         # 제품이름 원가 할인가
@@ -33,9 +36,12 @@ def crawling(soup):
         img_url = soup.find("picture").find("source")["srcset"]
         result.append([name, "jcrew", original_price, discount_price, img_url, product_url, category])
 
+        # 이미지 다운로드. 아래 주석해제하고 폴더위치 변경 후 사용.
+        j += 1
+        # urllib.request.urlretrieve(img_url, f"static/{category}/"+category +"_"+ str(j) + '.jpg' )
+
         # 진행률 체크
         # 한 품목이 여러 카테고리인 경우가 있어서 100% 가 조금 넘게 나옴!
-        global i
         i += 1
         print(f"현재 {i}/{total_num} 진행중. {round(i / total_num * 100, 2)}%")
 
