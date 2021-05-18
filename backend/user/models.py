@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     id = models.AutoField(primary_key=True)
-    nickname = models.CharField('nickname', max_length=40, default='')
+    full_name = models.CharField('full_name', max_length=40, default='')
     # 성별 선언해주기
     GENDER_MALE = 'male'
     GENDER_FEMALE = 'female'
@@ -19,9 +19,9 @@ class User(AbstractUser):
 
     @property
     def name(self):
-        return f"{self.last_name}{self.first_name}"
+        return f"{self.last_name} {self.first_name}"
 
-    REQUIRED_FIELDS = ['nickname']
+    REQUIRED_FIELDS = ['full_name']
 
     class meta:
         db_table = 'users'
