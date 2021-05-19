@@ -8,7 +8,7 @@ User = get_user_model()
 class UserCreateSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     password = serializers.CharField(
-        write_only=True, style={'input_type': 'password', 'placeholder': 'Password'})
+        write_only=True, style={'input_type': 'password', 'placeholder': 'Password'}, validators=[validate_password])
     full_name = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
 
