@@ -22,6 +22,7 @@ class User(AbstractUser):
         return f"{self.last_name} {self.first_name}"
 
     REQUIRED_FIELDS = ['full_name']
+    USERNAME_FIELD = 'username'
 
     class meta:
         db_table = 'users'
