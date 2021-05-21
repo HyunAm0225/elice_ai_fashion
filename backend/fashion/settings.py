@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'user',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_extensions'
+    'django_extensions',
+    'drf_yasg',
 ]
 
 GRAPH_MODELS = {
@@ -65,7 +66,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "elice-kdt-ai-track-vm-ai-14.koreacentral.cloudapp.azure.com:3000",
+    "http://elice-kdt-ai-track-vm-ai-14.koreacentral.cloudapp.azure.com:3000",
 )
 
 CORS_ALLOW_CREDENTIALS = True

@@ -7,11 +7,13 @@ from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework_jwt.views import refresh_jwt_token
 from rest_framework_jwt.views import verify_jwt_token
 
+
 router = routers.DefaultRouter()
 app_name = 'user'
 # router.register('user', views.UserCreateSerializer)
 
 urlpatterns = [
+    # 장고 앱
     path('signup/', views.SignupView.as_view(), name='signup'),
     path('login/', obtain_jwt_token),
     # path('logout/', refresh_jwt_token),
