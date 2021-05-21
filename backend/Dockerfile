@@ -11,6 +11,8 @@ WORKDIR /django
 
 ADD requirements.txt /django/
 
+RUN pip install --upgrade pip
+
 RUN pip install -r requirements.txt
 
 
