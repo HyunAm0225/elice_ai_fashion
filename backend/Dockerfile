@@ -9,7 +9,7 @@ ENV PYTHONBUFFERED 1
 RUN mkdir /django
 WORKDIR /django
 
-RUN sudo apt install graphviz
+# RUN sudo apt install graphviz
 
 ADD requirements.txt /django/
 
