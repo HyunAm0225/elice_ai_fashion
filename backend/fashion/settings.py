@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_extensions',
     'drf_yasg',
+    'crawling'
 ]
 
 GRAPH_MODELS = {
