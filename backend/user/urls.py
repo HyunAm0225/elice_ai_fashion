@@ -14,7 +14,7 @@ app_name = 'user'
 
 urlpatterns = [
     # 장고 앱
-    path('signup/', views.SignupView.as_view(), name='signup'),
-    path('login/', obtain_jwt_token),
+    path('signup', views.SignupView.as_view(), name='signup'),
+    path('login', obtain_jwt_token),
     # path('logout/', refresh_jwt_token),
 ]
