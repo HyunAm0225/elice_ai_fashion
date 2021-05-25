@@ -5,47 +5,52 @@ import urllib.request
 from urllib.parse import urlunparse
 from bs4 import BeautifulSoup
 import time
+import random
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fashion.settings")
 import django
 django.setup()
-from crawling.models import Crawl_data
+from crawling.models import Product
 
 def get6pmCrawler():
     categorys= {
-        "women-shirts-tops":"DL1w" ,
-        "women-coats-outerwear" : "DH1w",
-        "women-dresses" : "DE1w",
-        "women-pants" : "DK1w",
-        "women-sweaters" : "DQ1w",
-        "women-hoodies-sweatshirts" : "DF1w",
-        "women-jeans" : "DI1w",
-        "women-shorts" : "DM1w",
-        "women-skirts" : "DN1w",
-        "women-jumpsuits-rompers" : "CN3Q",
-        "women-suits" : "Cu4A" 
+        "women-shirts-tops":["DL1w", "Top" ],
+        "women-coats-outerwear" : ["DH1w", "Outer"],
+        "women-dresses" : ["DE1w", "Dress"],
+        "women-pants" : ["DK1w", "Pants"],
+        "women-sweaters" : ["DQ1w", "Sweater"],
+        "women-hoodies-sweatshirts" : ["DF1w", "Hoodie"],
+        "women-jeans" : ["DI1w", "Jeans"],
+        "women-shorts" : ["DM1w", "Shorts"],
+        "women-skirts" : ["DN1w", "Skirts"],
+        "women-jumpsuits-rompers" : ["CN3Q", "Jumpsuits"],
+        "women-suits" : ["Cu4A", "Outer"]
     }
+
+    color= ['white', 'grey', 'black', 'beige', 'brwon',' blue', 'navy', 'purple', 'green', 'red', 'orange', 'yellow', 'pink']
+    
     headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36'}
 
     url_home = "https://www.6pm.com"
     for category in categorys:
         time.sleep(10)
-        url = f"https://www.6pm.com/{category}/CKvXAR{categorys[category]}HAAQHiAgMBAhg.zso?s=isNew/desc/goLiveDate/desc/recentSalesStyle/desc/"
+        url = f"https://www.6pm.com/{category}/CKvXAR{categorys[category][0]}HAAQHiAgMBAhg.zso?s=isNew/desc/goLiveDate/desc/recentSalesStyle/desc/"
         res = requests.get(url, headers = headers)
         res.raise_for_status()
         soup = BeautifulSoup(res.text, 'html.parser')
         products = soup.find_all("article") 
 
-        for product in products:    
+        for product in products:
             img = product.figure.meta["content"]
-            _img_url = "../static/"+img+".jpg"
-            # urllib.request.urlretrieve(img, _img_url)
+            _thumnail = img
             _url = url_home + product.a["href"] 
-            _brand = product.find("dd",attrs={"class":"RN-z"}).get_text()
-            _name = product.find("dd",attrs={"class":"SN-z"}).get_text()
+            _brand = product.find("dd",attrs={"itemprop":"brand"}).get_text()
+            _name = product.find("dd",attrs={"itemprop":"name"}).get_text()
             _sale_price = product.find("span")
             _sale_price_text = _sale_price.get_text().split("$")[1]
             _price = _sale_price.find_next_sibling("span")
+            _feature = categorys[category][1]
+            _color = random.choice(color)
 
             if _price:
                 _price = _price.get_text().split("$")[1]
@@ -55,13 +60,14 @@ def get6pmCrawler():
                 if ',' in _sale_price_text:
                     _sale_price_text = _sale_price_text.replace(',','')
 
-                _discount_rate = str(int(( float(_sale_price_text) / float(_price) ) * 100))
+                _discount_rate = 100 - (int((float(_sale_price_text) / float(_price)) * 100))
 
             else:
                 _price = "0"
                 _discount_rate = "0"
-                
-            Crawl_data(name = _name, brand = _brand, price = _price, sale_price = _sale_price_text, discount_rate= _discount_rate + "%", url= _url, img_url = _img_url).save()
+  
+            Product(name = _name, brand = _brand, price = float(_price), sale_price = float(_sale_price_text), discount_rate= _discount_rate, url= _url, thumnail = _thumnail, category = _feature, color = _color, star=False).save()
+            
             
 def getFarfetchCrawler():
     code_code_to_category = {
@@ -124,11 +130,11 @@ def getFarfetchCrawler():
 
                 #영국 파운드화 기준으로 크롤링됨, 한국 환율 기준으로 변동 필요
                 price = product.find("span", {"data-testid": "price"}).get_text()
-                price = int(re.findall("\d+", price.replace(",", ""))[0])*1600
+                price = int(re.findall("\d+", price.replace(",", ""))[0]) * 1600
                 original_price = product.find(
                     "span", {"data-testid": "initialPrice"}
                 ).get_text()
-                original_price = int(re.findall("\d+", original_price.replace(",", ""))[0])*1600
+                original_price = int(re.findall("\d+", original_price.replace(",", ""))[0]) * 1600
                 sale = math.floor((original_price - price) / original_price * 100)
 
                 product_url = (
