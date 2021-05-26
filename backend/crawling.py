@@ -10,7 +10,7 @@ import random
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fashion.settings")
 import django
 django.setup()
-from crawling.models import Product
+from products.models import Product
 
 def get6pmCrawler():
     categorys= {
@@ -66,7 +66,7 @@ def get6pmCrawler():
                 _price = "0"
                 _discount_rate = "0"
   
-            Product(name = _name, brand = _brand, price = float(_price), sale_price = float(_sale_price_text), discount_rate= _discount_rate, url= _url, thumnail = _thumnail, category = _feature, color = _color, star=False).save()
+            Product(name = _name, brand = _brand, price = float(_price), sale_price = float(_sale_price_text), discount_rate= _discount_rate, url= _url, thumnail = _thumnail, category = _feature, color = _color).save()
             
             
 def getFarfetchCrawler():

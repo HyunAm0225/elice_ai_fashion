@@ -11,17 +11,24 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
+from rest_framework import status, viewsets
+from .serializers import ProductSerializer, LikeSerializer
 # Create your views here.
 
 
-class ProductListView(View):
+class ProductViewset(viewsets.ModelViewSet):
+    model = Product
+    permission_classes = [
+        AllowAny
+    ]
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
     def get(self, *args, **kwargs):
         # _category = catregory_name
         products = Product.objects.all()
         # products = Product.objects.filter(category = _category)
         products_list = []
-
+        
         for product in products:
             products_list.append({
                 'name': product.name,
@@ -38,6 +45,14 @@ class ProductListView(View):
         random.shuffle(products_list)
         return JsonResponse({'product_list': products_list}, status=200)
 
+# class ProductViewSet(viewsets.ModelViewSet):
+#     serializer_class = ProductSerializer
+#     queryset = Product.objects.all()
+#     permission_classes = [
+#         AllowAny
+#     ]
+#     def get_queryset(self):
+#         return super().get_queryset().filter(user_id=self.request.user.id) 
 
 class LikeProductView(View):
     @api_view(['POST'])
@@ -82,3 +97,12 @@ class LikeProductView(View):
             like_list.append(data)
 
         return JsonResponse({'like_list': like_list})
+
+class LikeProductViewSet(viewsets.ModelViewSet):
+    serializer_class = LikeSerializer
+    queryset = LikeProduct.objects.all()
+    permission_classes = [
+        AllowAny
+    ]
+    def get_queryset(self):
+        return super().get_queryset().filter(user_id=self.request.user.id) 
