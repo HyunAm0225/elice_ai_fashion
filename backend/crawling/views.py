@@ -7,11 +7,13 @@ import json
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 # Create your views here.
+
+
 class ProductListView(View):
-    def get(self):
+    def get(self, *args, **kwargs):
         # _category = catregory_name
         products = Product.objects.all()
         # products = Product.objects.filter(category = _category)
@@ -19,61 +21,62 @@ class ProductListView(View):
 
         for product in products:
             products_list.append({
-                'name' : product.name,
-                'brand' : product.brand,
-                'sale_price' : product.sale_price,
-                'price' : product.price,
-                'discount_rate' : product.discount_rate,
-                'thumnail' : product.thumnail,
-                'url' : product.url,
-                'category' : product.category,
-                'color' : product.color,
-                'star' : product.star,
+                'name': product.name,
+                'brand': product.brand,
+                'sale_price': product.sale_price,
+                'price': product.price,
+                'discount_rate': product.discount_rate,
+                'thumnail': product.thumnail,
+                'url': product.url,
+                'category': product.category,
+                'color': product.color,
+                # 'star': product.star,
             })
-        
+
         random.shuffle(products_list)
-        return JsonResponse({'product_list': products_list}, status = 200)
+        return JsonResponse({'product_list': products_list}, status=200)
+
 
 class LikeProductView(View):
     @api_view(['POST'])
     @permission_classes((IsAuthenticated, ))
     @authentication_classes((JSONWebTokenAuthentication,))
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         user_data = json.loads(request.body)
 
-        if not LikeProduct.objects.filter(product_id = user_data['product_id'], user_id = request.user.id).exists():
+        if not LikeProduct.objects.filter(product_id=user_data['product_id'], user_id=request.user.id).exists():
             LikeProduct.objects.create(
-                user    = request.user,
-                product = Product.objects.get(id = user_data['product_id'])
+                user=request.user,
+                product=Product.objects.get(id=user_data['product_id'])
             ).save
 
-            return JsonResponse({'message':'ADD_LIKE_PRODUCT'}, status=200)
+            return JsonResponse({'message': 'ADD_LIKE_PRODUCT'}, status=200)
 
-        delete_product = LikeProduct.objects.get(product_id = user_data['product_id'], user_id = request.user.id)
+        delete_product = LikeProduct.objects.get(product_id=user_data['product_id'], user_id=request.user.id)
         delete_product.delete()
 
-        return JsonResponse({'message':'DELETE_LIKE_PRODUCT'}, status=200)
+        return JsonResponse({'message': 'DELETE_LIKE_PRODUCT'}, status=200)
 
     @api_view(['GET'])
     @permission_classes((IsAuthenticated, ))
     @authentication_classes((JSONWebTokenAuthentication,))
-    def get(self, request):
-        like_list    = []
-        like_product = LikeProduct.objects.filter(user_id = request.user.id).prefetch_related("product")
-        
+    def get(self, request, *args, **kwargs):
+        like_list = []
+        like_product = LikeProduct.objects.filter(user_id=request.user.id).prefetch_related("product")
+
         for product in like_product:
             data = {
-                "id"           : product.product.id,
-                "product_line" : product.product.product_line,
-                "name"         : product.product.name,
-                "price"        : product.product.price,
-                "sale_price"   : product.product.sale_price,
-                "hash_tag"     : product.product.hash_tag,
-                "images"       : product.product.image_set.first().image_url,
-                "sale"         : product.product.productflag_set.first().sale_flag,
-                "gift"         : product.product.productflag_set.first().gift_flag
+                "id": product.product.id,
+                "product_line": product.product.product_line,
+                "name": product.product.name,
+                "price": product.product.price,
+                "sale_price": product.product.sale_price,
+                "hash_tag": product.product.hash_tag,
+                "images": product.product.image_set.first().image_url,
+                "sale": product.product.productflag_set.first().sale_flag,
+                "gift": product.product.productflag_set.first().gift_flag
             }
 
             like_list.append(data)
 
-        return JsonResponse({'like_list' : like_list})
+        return JsonResponse({'like_list': like_list})
