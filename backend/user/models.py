@@ -26,3 +26,12 @@ class User(AbstractUser):
 
     class meta:
         db_table = 'users'
+
+
+class Closet(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey("User", related_name="user", on_delete=models.CASCADE, db_column='user_id')
+    dress_img = models.ImageField(upload_to='%Y/%m/%d')
+
+    class meta:
+        db_table = 'closet'

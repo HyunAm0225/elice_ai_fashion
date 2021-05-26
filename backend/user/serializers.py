@@ -4,6 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 from rest_framework_jwt.settings import api_settings
 from rest_framework.response import Response
+from .models import Closet
 
 import json
 
@@ -36,3 +37,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password', 'full_name', 'email', 'token')
+
+
+class ClosetSerializer(serializers.ModelSerializer):
+    # image = serializers.ImageField(use_url=True)
+
+    class Meta:
+        model = Closet
+        fields = '__all__'
