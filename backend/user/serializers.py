@@ -13,11 +13,10 @@ User = get_user_model()
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all(), message="이미 존재하는 아이디 입니다.")])
+    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all(), message="이미 존재하는 아이디 입니다.")])
     password = serializers.CharField(
         write_only=True, style={'input_type': 'password', 'placeholder': 'Password'}, validators=[validate_password])
-    full_name = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
+    username = serializers.CharField(required=True)
     token = serializers.SerializerMethodField()
 
     def get_token(self, obj):
@@ -36,7 +35,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'full_name', 'email', 'token')
+        fields = ('email', 'password', 'username', 'token')
 
 
 class ClosetSerializer(serializers.ModelSerializer):

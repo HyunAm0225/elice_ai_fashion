@@ -10,7 +10,7 @@ class ClosetInLine(admin.StackedInline):
 
 class UserAdmin(admin.ModelAdmin):
     inlines = (ClosetInLine,)
-    list_display = ('username', 'full_name', 'name', 'gender',)
+    list_display = ('username', 'email', 'gender',)
 
 
 class ClosetAdmin(admin.ModelAdmin):
