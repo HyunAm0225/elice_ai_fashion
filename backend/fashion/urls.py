@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc-v1'),
     # 장고 앱
     path('admin/', admin.site.urls),
-    path('api/', include('crawling.urls', namespace='crawling')),
+    path('api/', include('products.urls', namespace='products')),
     path('api/', include('user.urls', namespace='user')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class Product(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, verbose_name="상품 이름")
     brand = models.CharField(max_length=100, verbose_name="브랜드") 
     sale_price = models.FloatField(verbose_name="판매가")
@@ -21,6 +22,7 @@ class Product(models.Model):
         return self.name
 
 class LikeProduct(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, )

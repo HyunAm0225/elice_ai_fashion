@@ -1,4 +1,7 @@
 from django.shortcuts import render
+
+# Create your views here.
+from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
 import random
@@ -30,7 +33,6 @@ class ProductListView(View):
                 'url': product.url,
                 'category': product.category,
                 'color': product.color,
-                # 'star': product.star,
             })
 
         random.shuffle(products_list)
@@ -41,9 +43,9 @@ class LikeProductView(View):
     @api_view(['POST'])
     @permission_classes((IsAuthenticated, ))
     @authentication_classes((JSONWebTokenAuthentication,))
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         user_data = json.loads(request.body)
-
+        print(request)
         if not LikeProduct.objects.filter(product_id=user_data['product_id'], user_id=request.user.id).exists():
             LikeProduct.objects.create(
                 user=request.user,
@@ -57,26 +59,26 @@ class LikeProductView(View):
 
         return JsonResponse({'message': 'DELETE_LIKE_PRODUCT'}, status=200)
 
-    @api_view(['GET'])
-    @permission_classes((IsAuthenticated, ))
-    @authentication_classes((JSONWebTokenAuthentication,))
-    def get(self, request, *args, **kwargs):
+    # @api_view(['GET'])
+    # @permission_classes((IsAuthenticated, ))
+    # @authentication_classes((JSONWebTokenAuthentication,))
+    def get(self, request):
         like_list = []
         like_product = LikeProduct.objects.filter(user_id=request.user.id).prefetch_related("product")
 
         for product in like_product:
             data = {
                 "id": product.product.id,
-                "product_line": product.product.product_line,
-                "name": product.product.name,
-                "price": product.product.price,
-                "sale_price": product.product.sale_price,
-                "hash_tag": product.product.hash_tag,
-                "images": product.product.image_set.first().image_url,
-                "sale": product.product.productflag_set.first().sale_flag,
-                "gift": product.product.productflag_set.first().gift_flag
+                'name': product.name,
+                'brand': product.brand,
+                'sale_price': product.sale_price,
+                'price': product.price,
+                'discount_rate': product.discount_rate,
+                'thumnail': product.thumnail,
+                'url': product.url,
+                'category': product.category,
+                'color': product.color,
             }
-
             like_list.append(data)
 
         return JsonResponse({'like_list': like_list})
