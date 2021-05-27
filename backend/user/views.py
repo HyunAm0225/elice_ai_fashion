@@ -32,9 +32,11 @@ class SignupView(CreateAPIView):
 
 class CurrentView(APIView):
     def get(self, request):
-        data = User.objects.filter(email=request.user)
-        user_data = serializers.serialize('json', data)
-        return HttpResponse(user_data, content_type="text/json-comment-filtered; charset=utf-8")
+        email = request.user.email
+        username = request.user.username
+        pk = request.user.pk
+        user_data = {"pk": pk, "username": username, "email": email}
+        return Response(user_data, status=status.HTTP_200_OK)
 
 
 class ClosetViewSet(viewsets.ModelViewSet):
