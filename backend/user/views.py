@@ -31,6 +31,8 @@ class SignupView(CreateAPIView):
 
 
 class CurrentView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         email = request.user.email
         username = request.user.username
