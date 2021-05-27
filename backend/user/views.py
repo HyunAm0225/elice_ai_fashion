@@ -8,6 +8,8 @@ from rest_framework_jwt.views import RefreshJSONWebToken
 from rest_framework.views import APIView
 from rest_framework import status, viewsets
 from django.shortcuts import get_object_or_404
+from django.core import serializers
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -26,6 +28,15 @@ class SignupView(CreateAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CurrentView(APIView):
+    def get(self, request):
+        email = request.user.email
+        username = request.user.username
+        pk = request.user.pk
+        user_data = {"pk": pk, "username": username, "email": email}
+        return Response(user_data, status=status.HTTP_200_OK)
 
 
 class ClosetViewSet(viewsets.ModelViewSet):
