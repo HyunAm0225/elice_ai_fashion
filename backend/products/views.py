@@ -1,108 +1,66 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render
-from django.views import View
-from django.http import JsonResponse
-import random
+import random, json
 from .models import Product, LikeProduct
-import json
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import status, viewsets
+from user.models import User
 from .serializers import ProductSerializer, LikeSerializer
-# Create your views here.
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import serializers, status
+from django.http import HttpResponse, JsonResponse
 
-
-class ProductViewset(viewsets.ModelViewSet):
+class productView(APIView):
     model = Product
+    serializer_class = ProductSerializer
     permission_classes = [
         AllowAny
     ]
-    serializer_class = ProductSerializer
-    queryset = Product.objects.all()
-    def get(self, *args, **kwargs):
-        # _category = catregory_name
-        products = Product.objects.all()
-        # products = Product.objects.filter(category = _category)
-        products_list = []
+
+    def get(self):
+        products = Product.objects.all() 
+        product_list = list(products)
+        random.shuffle(product_list)
+        serializer = ProductSerializer(product_list, many=True)
         
-        for product in products:
-            products_list.append({
-                'name': product.name,
-                'brand': product.brand,
-                'sale_price': product.sale_price,
-                'price': product.price,
-                'discount_rate': product.discount_rate,
-                'thumnail': product.thumnail,
-                'url': product.url,
-                'category': product.category,
-                'color': product.color,
-            })
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        random.shuffle(products_list)
-        return JsonResponse({'product_list': products_list}, status=200)
 
-# class ProductViewSet(viewsets.ModelViewSet):
-#     serializer_class = ProductSerializer
-#     queryset = Product.objects.all()
-#     permission_classes = [
-#         AllowAny
-#     ]
-#     def get_queryset(self):
-#         return super().get_queryset().filter(user_id=self.request.user.id) 
-
-class LikeProductView(View):
-    @api_view(['POST'])
-    @permission_classes((IsAuthenticated, ))
-    @authentication_classes((JSONWebTokenAuthentication,))
+class LikeProductView(APIView):
+    model = LikeProduct
+    serializer_class = LikeSerializer
+    authentication_classes = (JSONWebTokenAuthentication,)
+    permission_classes = [
+        IsAuthenticated
+    ]
+    
     def post(self, request):
         user_data = json.loads(request.body)
-        print(request)
-        if not LikeProduct.objects.filter(product_id=user_data['product_id'], user_id=request.user.id).exists():
+        print(user_data, request.user.pk)
+        if not LikeProduct.objects.filter(product_id = user_data['id'], user_id = request.user.pk).exists():
             LikeProduct.objects.create(
-                user=request.user,
-                product=Product.objects.get(id=user_data['product_id'])
+                user_id=request.user,
+                product_id=Product.objects.get(id = user_data['id']),
+                is_like = True
             ).save
+            return HttpResponse('good', status=200)
 
-            return JsonResponse({'message': 'ADD_LIKE_PRODUCT'}, status=200)
-
-        delete_product = LikeProduct.objects.get(product_id=user_data['product_id'], user_id=request.user.id)
+        delete_product = LikeProduct.objects.get(product_id = user_data['id'], user_id = request.user.pk)
         delete_product.delete()
 
-        return JsonResponse({'message': 'DELETE_LIKE_PRODUCT'}, status=200)
+        return HttpResponse({'message': 'DELETE_LIKE_PRODUCT'}, status=200)
 
-    # @api_view(['GET'])
-    # @permission_classes((IsAuthenticated, ))
-    # @authentication_classes((JSONWebTokenAuthentication,))
+
     def get(self, request):
-        like_list = []
-        like_product = LikeProduct.objects.filter(user_id=request.user.id).prefetch_related("product")
-
-        for product in like_product:
-            data = {
-                "id": product.product.id,
-                'name': product.name,
-                'brand': product.brand,
-                'sale_price': product.sale_price,
-                'price': product.price,
-                'discount_rate': product.discount_rate,
-                'thumnail': product.thumnail,
-                'url': product.url,
-                'category': product.category,
-                'color': product.color,
-            }
-            like_list.append(data)
-
-        return JsonResponse({'like_list': like_list})
-
-class LikeProductViewSet(viewsets.ModelViewSet):
-    serializer_class = LikeSerializer
-    queryset = LikeProduct.objects.all()
-    permission_classes = [
-        AllowAny
-    ]
-    def get_queryset(self):
-        return super().get_queryset().filter(user_id=self.request.user.id) 
+        like_list = [] 
+        like_products = LikeProduct.objects.filter(user_id = request.user.pk).values_list()
+        for like_product in like_products:
+            products = Product.objects.filter(id = str(like_product[2])) 
+            is_like_list = LikeProduct.objects.filter(product_id = str(like_product[2])).values_list()
+            is_like =(list(is_like_list)[0][3])
+            product_list = list(products.values())
+            product_list[0]['likeproduct'] = is_like
+            like_list.append(product_list[0])
+        
+        return JsonResponse({'like_list':like_list}) 

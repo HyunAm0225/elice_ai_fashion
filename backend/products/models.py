@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from user.models import User
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
@@ -12,7 +13,7 @@ class Product(models.Model):
     thumnail = models.URLField(max_length=2000, verbose_name="대표 이미지")
     category = models.CharField(max_length=200, default="clothes", verbose_name="카테고리")
     color = models.CharField(max_length=20, verbose_name="색상")
-    # likeProduct = models.ManyToManyField(settings.AUTH_USER_MODEL, through = 'LikeProduct', related_name = 'like_product')
+    likeproduct = models.ManyToManyField(User, through = 'LikeProduct', related_name = 'like_product', blank=True)
     
     class Meta:
         db_table = 'Product'
@@ -23,11 +24,9 @@ class Product(models.Model):
 
 class LikeProduct(models.Model):
     id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE, 
-        )
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='like_product', blank=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='like_product', blank=True,db_column='product_id')
+    is_like = models.BooleanField(default=False)
 
     class Meta:
         db_table = "likeproducts"
