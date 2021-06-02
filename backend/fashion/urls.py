@@ -47,5 +47,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('products.urls', namespace='products')),
     path('api/', include('user.urls', namespace='user')),
+    path('api/', include('style.urls', namespace='style')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
