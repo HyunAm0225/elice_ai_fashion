@@ -44,20 +44,16 @@ const useStyles = makeStyles((theme) => ({
     borderTop: "1px solid var(--color-bg-dark)",
     paddingTop: "20px",
   },
-  mobileSmallPadding: {
-    padding: "10px",
-  },
-  mobileImage: {
-    objectFit: "cover",
-    height: "100%",
-    width: "100%",
-    borderRadius: "15px",
-  },
   mobileShoppingBox: {
     paddingTop: "10px",
     borderTop: "1px solid var(--color-bg-dark)",
     height: "17vh",
     lineHeight: "5vh",
+  },
+  mobileShoppingText: {
+    display: "block",
+    textDecoration: "none",
+    color: "var(--color-gray)",
   },
   mobileInformationBox: {
     paddingTop: "10px",
@@ -65,8 +61,10 @@ const useStyles = makeStyles((theme) => ({
     height: "22vh",
     lineHeight: "5vh",
   },
-  mobileBoldText: {
-    fontWeight: "bold",
+  mobileInfomationText: {
+    display: "block",
+    textDecoration: "none",
+    color: "var(--color-gray)",
   },
   mobileFooterBox: {
     textAlign: "center",

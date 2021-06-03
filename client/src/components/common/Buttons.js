@@ -2,26 +2,40 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Typography } from "@material-ui/core";
 
+import { useHistory } from "react-router-dom";
+
 const useStyles = makeStyles((theme) => ({
   mobileButton: {
-    background: "rgba(165, 147, 224, 1)",
+    textDecoration: "none",
+    background: "var(--color-main-a)",
     width: "70vw",
     borderRadius: "15px",
+    color: "var(--color-bg-light)",
+    underline: "none",
+
+    "&.MuiButton-root:hover": {
+      background: "var(--color-main-a)",
+      color: "var(--color-bg-light)",
+    },
   },
   mobileButtonText: {
-    color: "rgba(256, 256, 256, 1)",
     fontSize: "20px",
     fontWeight: "Bold",
+    underline: "none",
   },
 }));
 
 export default function Buttons({ color, text, url }) {
   const classes = useStyles();
+  const history = useHistory();
+
+  function handleOnClick() {
+    history.push(url);
+  }
+
   return (
-    <React.Fragment>
-      <Button className={classes.mobileButton}>
-        <Typography className={classes.mobileButtonText}>{text}</Typography>
-      </Button>
-    </React.Fragment>
+    <Button className={classes.mobileButton} onClick={handleOnClick}>
+      <Typography className={classes.mobileButtonText}>{text}</Typography>
+    </Button>
   );
 }

@@ -6,17 +6,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   mobileAppBar: {
     background: "rgba(248, 248, 248, 1)",
-    position:"static"
+    position: "static",
   },
   mobileAccountCircleIcon: {
     fontSize: "35px",
     color: "rgba(86, 98, 112, 1)",
   },
-  mobileArrowBackIosIcon:{
+  mobileArrowBackIosIcon: {
     fontSize: "25px",
     color: "rgba(86, 98, 112, 1)",
   },
@@ -25,6 +26,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function AccountCircleButton() {
+  const classes = useStyles();
+
+  if (localStorage.getItem("jwt") === null) {
+    return (
+      <Link to="/login">
+        <AccountCircle className={classes.mobileAccountCircleIcon} />
+      </Link>
+    );
+  } else {
+    return (
+      <Link to="/mypage">
+        <AccountCircle className={classes.mobileAccountCircleIcon} />
+      </Link>
+    );
+  }
+}
+
 export default function Navbar() {
   const classes = useStyles();
   const history = useHistory();
@@ -32,9 +51,14 @@ export default function Navbar() {
     <React.Fragment>
       <AppBar className={classes.mobileAppBar} elevation={0}>
         <Toolbar>
-          <ArrowBackIosIcon className={classes.mobileArrowBackIosIcon} onClick={()=> {history.goBack()}}/>
+          <ArrowBackIosIcon
+            className={classes.mobileArrowBackIosIcon}
+            onClick={() => {
+              history.goBack();
+            }}
+          />
           <Box className={classes.mobileGrow} />
-          <AccountCircle className={classes.mobileAccountCircleIcon} />
+          <AccountCircleButton />
         </Toolbar>
       </AppBar>
     </React.Fragment>

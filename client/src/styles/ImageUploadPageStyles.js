@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core/styles";
-import '../App.css';
+import "App.css";
 
 const useStyles = makeStyles((theme) => ({
   //mobile
@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     height: "auto",
     position: "relative",
   },
+  // TextTitleComponent
   mobileTitleBox: {
     margin: "10px",
   },
@@ -18,27 +19,10 @@ const useStyles = makeStyles((theme) => ({
   },
   mobileSubtitleText: {
     color: "rgba(165, 147, 224, 1)",
-    fontSize: "15px",
+    fontSize: "3.7vw",
   },
 
-  mobileClosetImageGrid: {
-    padding: "10px",
-  },
-
-  mobileImageBox: {
-    height: "180px",
-    backgroundColor: "var(--color-bg-light)",
-    borderRadius: "15px",
-    borderColor: "black",
-  },
-
-  mobileImage: {
-    objectFit: "cover",
-    height: "100%",
-    width: "100%",
-    borderRadius: "15px",
-  },
-
+  //UploadImageComponent
   mobileEmptyImageBox: {
     height: "180px",
     backgroundColor: "var(--color-bg-light)",
@@ -47,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
     alignContent: "center",
     outline: "none",
   },
+  mobileInput: {
+    display: " none",
+  },
   mobileEmptyImageIcon: {
     color: "var(--color-bg-dark)",
     fontSize: "35px",
-  },
-  mobileInput: {
-    display: " none",
   },
 }));
 

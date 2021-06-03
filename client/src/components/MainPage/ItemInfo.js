@@ -1,32 +1,28 @@
+import React from "react";
 import { Grid, Box } from "@material-ui/core";
-import FavoriteIcon from "./FavoriteIcon";
-import useStyles from "../../styles/MainPageStyle";
+import FavoriteIcon from "components/MainPage/FavoriteIcon";
+import useStyles from "styles/MainPageStyle";
 
-export default function ItemInfo({ idx }) {
+export default function ItemInfo({ idx, data }) {
   const classes = useStyles();
-  const brand = "노드스트롬";
-  const description = "Zella Live In High Walst Pocket 7/8 Leggings";
-  const discount = "33%";
-  const price = "57,300";
-
   return (
-    <Grid className={classes.mobileRecommendImageBox} item xs={6}>
-      <Box className={classes.mobileImageBox}>
-        <img
-          className={classes.mobileImage}
-          src="http://fpost.co.kr/board/data/editor/1902/af6295e29b76e6d52de0accea62b4e4b_1550713144_4274.jpg"
-          alt="옷"
-        ></img>
+    <Grid className="mobileSmallPaddingBox" item xs={6}>
+      <Box className={classes.mobileItemImageBox}>
+        <img className="mobileImage" src={data["thumnail"]} alt="옷"></img>
       </Box>
-      <Box className={classes.mobileDiscountPriceBox}>
-        <Box className={classes.mobileDiscount}>{discount}</Box>
-        <Box className={classes.mobilePrice}>{price}</Box>
+      <Box className={classes.mobileItemDiscountPriceBox}>
+        <Box className={classes.mobileItemDiscount}>
+          {data["discount_rate"]}%
+        </Box>
+        <Box className={classes.mobileItemPrice}>{data["sale_price"]}$</Box>
       </Box>
-      <Box className={classes.mobileBrandFavoriteBox}>
-        <Box className={classes.mobileBrandName}>{brand}</Box>
+      <Box className={classes.mobileItemBrandFavoriteBox}>
+        <Box className={classes.mobileItemBrandName}>
+          <a href={data["url"]}>{data["brand"]}</a>
+        </Box>
         <FavoriteIcon idx={idx.toString()} />
       </Box>
-      <Box className={classes.mobileShortDescription}>{description}</Box>
+      <Box className={classes.mobileItemShortDescription}>{data["name"]}</Box>
     </Grid>
   );
 }

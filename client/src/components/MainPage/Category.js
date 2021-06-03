@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Grid, Button } from "@material-ui/core";
-import useStyles from "../../styles/MainPageStyle";
+import { Box, Button } from "@material-ui/core";
+import useStyles from "styles/MainPageStyle";
 
 export default function Category() {
   const classes = useStyles();
@@ -8,6 +8,8 @@ export default function Category() {
 
   const categories = [
     "전체",
+    "높은 가격순",
+    "낮은 가격순",
     "상의",
     "하의",
     "드레스",
@@ -34,5 +36,5 @@ export default function Category() {
     ),
   );
 
-  return <Grid className={classes.mobileCategoryContainer}>{categories}</Grid>;
+  return <Box className={classes.mobileCategoryContainer}>{categories}</Box>;
 }

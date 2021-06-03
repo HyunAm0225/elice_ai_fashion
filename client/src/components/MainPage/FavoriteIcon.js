@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import StarsIcon from "@material-ui/icons/Stars";
 import { Checkbox, Box } from "@material-ui/core";
-import "../../App.css";
 
 export default function FavoriteIcon({ idx }) {
   const [favorite, setFavorite] = useState({});
 
-  const handleChange = (event) => {
+  // 찜하기 체크 여부
+  const onLikeChange = (event) => {
     setFavorite({ ...favorite, [event.target.name]: event.target.checked });
   };
 
@@ -15,7 +15,7 @@ export default function FavoriteIcon({ idx }) {
       <Checkbox
         style={{ padding: "0" }}
         checked={favorite.idx}
-        onChange={handleChange}
+        onChange={onLikeChange}
         icon={<StarsIcon style={{ color: "var(--color-bg-dark)" }} />}
         checkedIcon={<StarsIcon style={{ color: "var(--color-main-a)" }} />}
         name={idx}

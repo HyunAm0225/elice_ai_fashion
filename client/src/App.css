@@ -1,52 +1,84 @@
+@font-face {
+  font-family: "SeoulNamsanM";
+  src: local('SeoulNamsanM'),
+    url("./font/08SeoulNamsanM_0.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+* {
+  font-family: "SeoulNamsanM"
+}
+
 :root {
   /* Color */
-  --color-main-a: #A593E0;
+  --color-main-a: #a593e0;
   --color-main-b: #566270;
-  --color-main-c: #FFFFF3;
-  
-  --color-bg-dark: #E0E3DA;
-  --color-bg-light: #F8F8F8;
+  --color-main-c: #fffff3;
+
+  --color-bg-dark: #e0e3da;
+  --color-bg-light: #f5f4f2;
 
   --color-gray: #838383;
   --color-black: #000000;
-  --color-red: #F05D5D;
+  --color-red: #f05d5d;
+
+  /* Font size */
+  --font-micro: 14px;
+  --font-small: 16px;
+  --font-regular: 18px;
+  --font-medium: 28px;
+  --font-large: 48px;
+
+  /* Font weight */
+  --weight-regular: 400;
+  --weight-semi-bold: 700;
+  --weight-bold: 900;
+
+  /* Padding size */
+  --padding-small: 10px;
+  --padding-large: 15px;
 }
 
-.App {
-  text-align: center;
+a {
+  color: var(--color-black);
+  text-decoration: none;
+}
+body {
+  background-color: #fcfcfc;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* 모바일 Common CSS */
+.mobileBigPaddingBox {
+  padding: var(--padding-large);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.mobileSmallPaddingBox {
+  padding: var(--padding-small);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.mobileImage {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-radius: 15px;
+}
+.mobileBoldText {
+  font-weight: bold;
 }
 
-.App-link {
-  color: #61dafb;
+.mobileRoot {
+  text-align: "center";
+  padding: 8px;
+  flex-grow: 1;
+  background-color: lightgray;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.mobileGlassBox {
+  background: rgba( 255, 255, 255, 0.35 );
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 4px );
+  -webkit-backdrop-filter: blur( 4px );
+  border-radius: 10px;
 }
