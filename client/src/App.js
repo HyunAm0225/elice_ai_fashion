@@ -11,6 +11,7 @@ import SimilarItemPage from "pages/Shop/SimilarItemPage";
 import RecentItemPage from "pages/MyPage/RecentItemPage";
 import RecommendItemPage from "pages/Shop/RecommendItemPage";
 import LikeItemPage from "pages/MyPage/LikeItemPage";
+import CountPage from "pages/test2";
 
 axios.defaults.withCredentials = true;
 
@@ -29,6 +30,7 @@ function App() {
         <Route exact path="/likeitem" component={LikeItemPage} />
         <Route exact path="/rcntitem" component={RecentItemPage} />
         <Route exact path="/rcmditem" component={RecommendItemPage} />
+        <Route exact path="/count" component={CountPage} />
       </Switch>
     </Router>
   );

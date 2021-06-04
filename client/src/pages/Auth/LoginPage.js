@@ -8,18 +8,21 @@ import Navbar from "components/common/Navbar";
 import Buttons from "components/common/Buttons";
 import Toast from "components/common/Toast";
 
+import { useRecoilState, useRecoilValue } from "recoil";
+import { idState, passwordState, toastState } from "state/State";
+import Test from "utils/onChangeHandler";
+
 function LoginPage() {
   const classes = useStyles();
   const history = useHistory();
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+  const [id, setId] = useRecoilState(idState);
+  const [password, setPassword] = useRecoilState(passwordState);
   const [blank, setBlank] = useState(false);
-  const [toast, setToast] = useState(false);
-  const [text, setText] = useState("");
-  const [severity, setSeverity] = useState("");
+  const toast = useRecoilValue(toastState);
+  const [text, setText] = useState("실험중");
+  const [severity, setSeverity] = useState("error");
 
-  // (로그인 폼) 입력 핸들러
-  const onChangeHandler = (event) => {
+  function ChangeHandler(event) {
     const {
       target: { name, value },
     } = event;
@@ -29,17 +32,17 @@ function LoginPage() {
     } else if (name === "password") {
       setPassword(value);
     }
-  };
+  }
 
   // validation 경고 문구
-  const onToastHandler = (msg, svt) => {
-    setText(msg);
-    setSeverity(svt);
-    setToast(true);
-    window.setTimeout(() => {
-      setToast(false);
-    }, 333000);
-  };
+  // const onToastHandler = (msg, svt) => {
+  //   setText(msg);
+  //   setSeverity(svt);
+  //   setToast(true);
+  //   window.setTimeout(() => {
+  //     setToast(false);
+  //   }, 3000);
+  // };
 
   // 로그인 버튼 핸들러
   const onLoginHandler = (event) => {
@@ -56,7 +59,7 @@ function LoginPage() {
         .then((response) => {
           if (response.status === 200) {
             localStorage.setItem("jwt", response.data.token);
-            onToastHandler("로그인 성공!", "success");
+            // onToastHandler("로그인 성공!", "success");
             axios
               .get(`${process.env.REACT_APP_API_URL}/api/current/`, {
                 headers: {
@@ -79,14 +82,15 @@ function LoginPage() {
         })
         .catch((error) => {
           if (error.response.data.email) {
-            onToastHandler(error.response.data.email[0], "error");
+            // onToastHandler(error.response.data.email[0], "error");
           } else if (error.response.data.password) {
-            onToastHandler(error.response.data.password[0], "error");
+            // onToastHandler(error.response.data.password[0], "error");
           } else if (error.response.data.non_field_errors) {
-            onToastHandler("아이디 혹은 비밀번호를 확인해주세요.", "error");
+            Test("으악");
+            // onToastHandler("아이디 혹은 비밀번호를 확인해주세요.", "error");
           } else {
             console.log(error.response);
-            onToastHandler("예상치 못한 오류 발생", "error");
+            // onToastHandler("예상치 못한 오류 발생", "error");
           }
         });
     }
@@ -109,7 +113,7 @@ function LoginPage() {
                   name="id"
                   type="text"
                   value={id}
-                  onChange={onChangeHandler}
+                  onChange={ChangeHandler}
                 />
                 <TextField
                   className={classes.mobileTextField}
@@ -119,7 +123,7 @@ function LoginPage() {
                   name="password"
                   type="password"
                   value={password}
-                  onChange={onChangeHandler}
+                  onChange={ChangeHandler}
                 />
                 <br />
               </Box>
