@@ -34,10 +34,12 @@ class CurrentView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
+        print(request.user)
         email = request.user.email
         username = request.user.username
         pk = request.user.pk
-        user_data = {"pk": pk, "username": username, "email": email}
+        styles = request.user.styles.all().values()
+        user_data = {"pk": pk, "username": username, "email": email, "styles": styles}
         return Response(user_data, status=status.HTTP_200_OK)
 
 
