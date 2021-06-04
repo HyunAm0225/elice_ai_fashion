@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-
+from style.models import Style
 # Create your models here.
 
 
@@ -20,7 +20,8 @@ class User(AbstractUser):
         (GENDER_MALE, '남성'),
         (GENDER_FEMALE, '여성'),
     )
-    gender = models.CharField(max_length=10, choices=CHOICES_GENDER, null=True)
+    gender = models.CharField(max_length=10, choices=CHOICES_GENDER, blank=True, default='')
+    styles = models.ManyToManyField(Style, related_name="style", blank=True, db_column='style_id', default='')
 
     @property
     def name(self):
