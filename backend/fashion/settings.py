@@ -80,6 +80,9 @@ CORS_ORIGIN_WHITELIST = (
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://elice-kdt-ai-track-vm-ai-14.koreacentral.cloudapp.azure.com:3000",
+    "elice-kdt-ai-track-vm-distribute-14.koreacentral.cloudapp.azure.com:8301",
+    "elice-kdt-ai-track-vm-distribute-14.koreacentral.cloudapp.azure.com",
+    "elice-kdt-ai-track-vm-distribute-14.koreacentral.cloudapp.azure.com:3000"
 )
 
 CORS_ALLOW_CREDENTIALS = True
