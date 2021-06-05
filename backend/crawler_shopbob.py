@@ -27,23 +27,26 @@ kategorie_data = {
 "dresses": ["15412","long sleeve dress"],
 "jackets": ["64849","long sleeve outwear"],
 "jeans": ["15382","trousers"],
-"pants": ["15474","trousers"],
+"pants-leggings": ["15474","trousers"],
 "shorts": ["15486","shorts"],
 "skirts": ["15491","skirt"],
 'sweaters-knits': ["15505","long sleeve top"],
 "tops": ["15522","long sleeve top"]
 }
 
-color_data= ['white', 'grey', 'black', 'beige', 'brwon',' blue', 'navy', 'purple', 'green', 'red', 'orange', 'yellow', 'pink']
+color_data= ['white', 'grey', 'black', 'beige', 'brown',' blue', 'navy', 'purple', 'green', 'red', 'orange', 'yellow', 'pink']
 
 def get_cloth_data():
     number = [get_cloth_count(kategorie) for kategorie in kategorie_data]
     print(number)
-    n = 1
-    # test = 0
+    test = 1
     for idx,kategorie in enumerate(kategorie_data):
         for i in range(number[idx]):
-            result = requests.get(f"https://www.shopbop.com/sale-clothing-{kategorie}/br/v=1/{kategorie_data[kategorie][0]}.htm?baseIndex={i*100}")
+            n = 1
+            if kategorie == 'tops':
+                result = requests.get(f"https://www.shopbop.com/shop-category-sale-clothing-{kategorie}/br/v=1/{kategorie_data[kategorie][0]}.htm?baseIndex={i*100}")
+            else:
+                result = requests.get(f"https://www.shopbop.com/sale-clothing-{kategorie}/br/v=1/{kategorie_data[kategorie][0]}.htm?baseIndex={i*100}")
             # Check for 200 OK response
             src = result.content
             soup = BeautifulSoup(src, 'lxml')
@@ -52,21 +55,24 @@ def get_cloth_data():
                 # print(li.find('div', class_='title').get_text().strip(), end=" ")
                 # print(li.find('div', class_='title').get_text().strip(), end=" ")
                 # print(li.find('span', class_='sale-price-low').get_text().strip())
-                _brand = li.find('div', class_='brand').get_text().strip()
-                _name = li.find('div', class_='title').get_text().strip().replace('/', '')
-                _price = li.find('span', class_='retail-price').get_text().strip().split("$")[1].replace(',','')
-                _sale_price = li.find('span', class_='sale-price-low').get_text().strip().split("$")[1].replace(',','')
+                # _brand = li.find('div', class_='brand').get_text().strip()
+                # _name = li.find('div', class_='title').get_text().strip().replace('/', '')
+                # _price = li.find('span', class_='retail-price').get_text().strip().split("$")[1].replace(',','')
+                # _sale_price = li.find('span', class_='sale-price-low').get_text().strip().split("$")[1].replace(',','')
                 _thumnail = li.find('span', class_='productBrowseMainImage').find('img')['src'].strip()
-                _url = f"https://www.shopbop.com/{li.find('a')['href']}"
-                _feature = kategorie_data[kategorie][1]
-                _color = random.choice(color_data)
-                print(_price,_sale_price)
-                _discount_rate = 100 - (int((float(_sale_price) / float(_price)) * 100))
-                # 이미지 다운로드
-                # urllib.request.urlretrieve(img, f"static/{kategorie}/{title}.jpg") # 이미지 다운로드
-                # print(f"{n}/{number} 다운로드 중")
+                # _url = f"https://www.shopbop.com/{li.find('a')['href']}"
+                # _feature = kategorie_data[kategorie][1]
+                # _color = random.choice(color_data)
+                # print(_price,_sale_price)
+                # _discount_rate = 100 - (int((float(_sale_price) / float(_price)) * 100))
+                #이미지 다운로드
+                urllib.request.urlretrieve(_thumnail, f"test/{test}.jpg") # 이미지 다운로드
+                print(f"{n}/{kategorie_data[kategorie][1]}/{i * 100} 다운로드 중")
                 n += 1
-                Product(name = _name, brand = _brand, price = float(_price), sale_price = float(_sale_price), discount_rate= _discount_rate, url= _url, thumnail = _thumnail, category = _feature, color = _color).save()
+                test += 1
+                if n == 30:
+                    break
+                # Product(name = _name, brand = _brand, price = float(_price), sale_price = float(_sale_price), discount_rate= _discount_rate, url= _url, thumnail = _thumnail, category = _feature, color = _color).save()
 
 def get_cloth_count(kategorie):
     result = requests.get(f"https://www.shopbop.com/sale-clothing-{kategorie}/br/v=1/{kategorie_data[kategorie][0]}.htm")
@@ -75,6 +81,7 @@ def get_cloth_count(kategorie):
     number = soup.find("div", class_="results").get_text()
     pagination = int(number.split()[0]) // 100 + 1
     return pagination
+
 
 def get6pmCrawler():
     categorys= {
@@ -349,5 +356,6 @@ def getJcrewCrawler():
 
 
 if __name__=='__main__':
-    get_cloth_data()
+    # get_cloth_data()
+    test()
     
