@@ -1,7 +1,7 @@
 import random
 import json
 from .models import Product, LikeProduct
-from user.models import User
+from style.models import Style
 from .serializers import ProductSerializer, LikeSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -30,9 +30,25 @@ class RecommendView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [
-        IsAuthenticated
+        AllowAny
     ]
     pagination_class = CustomResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,) 
+    filter_fields = ('category',)
+
+    def post(self, request):
+        recommend_list = []
+        request = (json.loads(request.body))
+        style_list = [i for i in request['styles']]
+        for i in style_list:
+            style = list(Style.objects.filter(id=i).values_list())[0][2]
+            for j in style:
+                _category = j
+                _color = style[_category]
+                recommend_list.append(list(Product.objects.filter(category=_category,color=_color).values()))
+        return JsonResponse({'recommend_list': recommend_list})
+
+
 
 
 class LikeProductView(APIView):
