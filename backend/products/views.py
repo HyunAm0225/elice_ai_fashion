@@ -40,19 +40,12 @@ class RecommendView(generics.ListAPIView):
         recommend_list = []
         request = (json.loads(request.body))
         style_list = [i for i in request['styles']]
-        print(style_list)
         for i in style_list:
             style = list(Style.objects.filter(id=i).values_list())[0][2]
-            print("style : " ,style)
-            print(" ")
             for j in style:
                 _category = j
                 _color = style[_category]
-                print("_category :", _category)
-                print("_color :", _color)
                 recommend_list.append(list(Product.objects.filter(category=_category,color=_color).values()))
-            print(" ")
-        print(recommend_list) 
         return JsonResponse({'recommend_list': recommend_list})
 
 
