@@ -1,7 +1,7 @@
 import random
 import json
 from .models import Product, LikeProduct
-from user.models import User
+from style.models import Style
 from .serializers import ProductSerializer, LikeSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,24 +9,46 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import serializers, status
+from rest_framework import serializers, status, generics
+from django_filters import rest_framework as filters
 from django.http import HttpResponse, JsonResponse
+from .pagination import CustomResultsSetPagination
 
-
-class productView(APIView):
+class ProductView(generics.ListAPIView):
     model = Product
+    queryset = Product.objects.get_queryset().order_by('?')
     serializer_class = ProductSerializer
     permission_classes = [
         AllowAny
     ]
+    pagination_class = CustomResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,) 
+    filter_fields = ('category',)
 
-    def get(self, *args, **kwargs):
-        products = Product.objects.all()
-        product_list = list(products)
-        random.shuffle(product_list)
-        serializer = ProductSerializer(product_list, many=True)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+class RecommendView(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [
+        AllowAny
+    ]
+    pagination_class = CustomResultsSetPagination
+    filter_backends = (filters.DjangoFilterBackend,) 
+    filter_fields = ('category',)
+
+    def post(self, request):
+        recommend_list = []
+        request = (json.loads(request.body))
+        style_list = [i for i in request['styles']]
+        for i in style_list:
+            style = list(Style.objects.filter(id=i).values_list())[0][2]
+            for j in style:
+                _category = j
+                _color = style[_category]
+                recommend_list.append(list(Product.objects.filter(category=_category,color=_color).values()))
+        return JsonResponse({'recommend_list': recommend_list})
+
+
 
 
 class LikeProductView(APIView):

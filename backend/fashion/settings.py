@@ -49,12 +49,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'user',
     'rest_framework',
     'rest_framework.authtoken',
     'django_extensions',
     'drf_yasg',
-    'products'
+    'products',
+    'style',
+    # 'django_filters',
 ]
 
 GRAPH_MODELS = {
@@ -73,11 +76,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://elice-kdt-ai-track-vm-ai-14.koreacentral.cloudapp.azure.com:3000",
-)
+# CORS_ORIGIN_WHITELIST = (
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "http://elice-kdt-ai-track-vm-ai-14.koreacentral.cloudapp.azure.com:3000",
+#     "http://elice-kdt-ai-track-vm-distribute-14.koreacentral.cloudapp.azure.com:8301",
+#     "http://elice-kdt-ai-track-vm-distribute-14.koreacentral.cloudapp.azure.com",
+#     "http://elice-kdt-ai-track-vm-distribute-14.koreacentral.cloudapp.azure.com:3000"
+# )
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -206,12 +214,14 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
 
-
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
     ),
 }
 
