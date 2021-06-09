@@ -44,13 +44,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class ClosetSerializer(serializers.ModelSerializer):
     # image = serializers.ImageField(use_url=True)
-    feature = serializers.SerializerMethodField()
+    # feature = serializers.SerializerMethodField()
+    feature = serializers.JSONField(read_only=True)
 
     def get_feature(self, style):
         yolo_net, YOLO_LABELS = yolo_init()
         image = f"{settings.BASE_DIR}{style.dress_img.url}"
         feature = get_fe(yolo_net, image, YOLO_LABELS)
-        # print(feature)
         return feature
 
     def create(self, validated_data):
@@ -62,4 +62,4 @@ class ClosetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Closet
-        fields = '__all__'
+        fields = ['user_id', 'dress_img', 'feature']
