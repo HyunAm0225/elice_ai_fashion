@@ -1,12 +1,14 @@
+from temp import *
 from django.shortcuts import render
 import requests, os, urllib.request, time, random, ssl
 from urllib.parse import urlunparse
 from bs4 import BeautifulSoup
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fashion.settings")
 import django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fashion.settings")
 django.setup()
 from products.models import Product
 ssl._create_default_https_context = ssl._create_unverified_context
+
 
 # short sleeve top
 # long sleeve top
@@ -52,27 +54,21 @@ def get_cloth_data():
             soup = BeautifulSoup(src, 'lxml')
             ul = soup.find("ul", {'class': 'products'})
             for li in ul.find_all("li"):
-                # print(li.find('div', class_='title').get_text().strip(), end=" ")
-                # print(li.find('div', class_='title').get_text().strip(), end=" ")
-                # print(li.find('span', class_='sale-price-low').get_text().strip())
-                # _brand = li.find('div', class_='brand').get_text().strip()
-                # _name = li.find('div', class_='title').get_text().strip().replace('/', '')
-                # _price = li.find('span', class_='retail-price').get_text().strip().split("$")[1].replace(',','')
-                # _sale_price = li.find('span', class_='sale-price-low').get_text().strip().split("$")[1].replace(',','')
+                _brand = li.find('div', class_='brand').get_text().strip()
+                _name = li.find('div', class_='title').get_text().strip().replace('/', '')
+                _price = li.find('span', class_='retail-price').get_text().strip().split("$")[1].replace(',','')
+                _sale_price = li.find('span', class_='sale-price-low').get_text().strip().split("$")[1].replace(',','')
                 _thumnail = li.find('span', class_='productBrowseMainImage').find('img')['src'].strip()
-                # _url = f"https://www.shopbop.com/{li.find('a')['href']}"
-                # _feature = kategorie_data[kategorie][1]
-                # _color = random.choice(color_data)
-                # print(_price,_sale_price)
-                # _discount_rate = 100 - (int((float(_sale_price) / float(_price)) * 100))
-                #이미지 다운로드
-                urllib.request.urlretrieve(_thumnail, f"test/{test}.jpg") # 이미지 다운로드
+                _url = f"https://www.shopbop.com/{li.find('a')['href']}"
+                _discount_rate = 100 - (int((float(_sale_price) / float(_price)) * 100))
+                # 이미지 다운로드
+                urllib.request.urlretrieve(_thumnail, f"./crawling.jpg") # 이미지 다운로드
+                image_path = "./crawling.jpg"
                 print(f"{n}/{kategorie_data[kategorie][1]}/{i * 100} 다운로드 중")
-                n += 1
+                data = get_feature(yolo_net, image_path, YOLO_LABELS)
+                print(data)
                 test += 1
-                if n == 30:
-                    break
-                # Product(name = _name, brand = _brand, price = float(_price), sale_price = float(_sale_price), discount_rate= _discount_rate, url= _url, thumnail = _thumnail, category = _feature, color = _color).save()
+                Product(name = _name, brand = _brand, price = float(_price), sale_price = float(_sale_price), discount_rate= _discount_rate, url= _url, thumnail = _thumnail, category = _feature, color = _color).save()
 
 def get_cloth_count(kategorie):
     result = requests.get(f"https://www.shopbop.com/sale-clothing-{kategorie}/br/v=1/{kategorie_data[kategorie][0]}.htm")
@@ -356,6 +352,6 @@ def getJcrewCrawler():
 
 
 if __name__=='__main__':
-    # get_cloth_data()
-    test()
+    yolo_net, YOLO_LABELS = yolo_init()
+    get_cloth_data()
     

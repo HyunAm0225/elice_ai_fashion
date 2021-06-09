@@ -2,11 +2,11 @@ import cv2
 from PIL import ImageFont, ImageDraw, Image
 import numpy as np
 import time
-import os
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
-
+import os
 # color boundaries
+
 LOWER_HSV = {
     'red': np.array([0, 100, 20], np.uint8),
     "orange": np.array([10, 100, 20], np.uint8),
@@ -194,7 +194,4 @@ def get_feature(yolo_net, image_path, YOLO_LABELS):
 
 
 if __name__ == "__main__":
-    yolo_net, YOLO_LABELS = yolo_init()
-    image_path = "./test001.jpg"
-    data = get_feature(yolo_net, image_path, YOLO_LABELS)
-    print(data)
+    print("실행")

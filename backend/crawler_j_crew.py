@@ -7,7 +7,7 @@ import django
 django.setup()
 from products.models import Product
 ssl._create_default_https_context = ssl._create_unverified_context
-
+from 
 # short sleeve top
 # long sleeve top
 # short sleeve outwear
