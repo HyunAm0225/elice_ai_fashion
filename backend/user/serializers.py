@@ -5,6 +5,10 @@ from rest_framework.validators import UniqueValidator
 from rest_framework_jwt.settings import api_settings
 from rest_framework.response import Response
 from .models import Closet
+from user.temp import get_feature as get_fe
+from user.temp import yolo_init
+from django.conf import settings
+
 
 import json
 
@@ -40,6 +44,21 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class ClosetSerializer(serializers.ModelSerializer):
     # image = serializers.ImageField(use_url=True)
+    feature = serializers.SerializerMethodField()
+
+    def get_feature(self, style):
+        yolo_net, YOLO_LABELS = yolo_init()
+        image = f"{settings.BASE_DIR}{style.dress_img.url}"
+        feature = get_fe(yolo_net, image, YOLO_LABELS)
+        # print(feature)
+        return feature
+
+    def create(self, validated_data):
+        closet = Closet.objects.create(**validated_data)
+        closet.feature = self.get_feature(closet)
+        # print(closet)
+        closet.save()
+        return closet
 
     class Meta:
         model = Closet
