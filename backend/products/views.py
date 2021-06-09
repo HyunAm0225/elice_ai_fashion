@@ -4,10 +4,11 @@ from .serializers import ProductSerializer, LikeSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import  generics
+from rest_framework import generics
 from django_filters import rest_framework as filters
 from django.http import HttpResponse, JsonResponse
 from .pagination import CustomResultsSetPagination
+
 
 class ProductView(generics.ListAPIView):
     """
@@ -22,7 +23,7 @@ class ProductView(generics.ListAPIView):
         AllowAny
     ]
     pagination_class = CustomResultsSetPagination
-    filter_backends = (filters.DjangoFilterBackend,) 
+    filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('category',)
 
 
@@ -49,19 +50,19 @@ class RecommendView(generics.ListAPIView):
     ]
     pagination_class = CustomResultsSetPagination
 
-    def get(self, request):
+    def post(self, request):
         recommend_list = []
         request = (json.loads(request.body))
         print(request)
         for style in request:
             for category, color in style.items():
-                print(category,color)
-                recommend_product = Product.objects.filter(category = category, color = color)
+                print(category, color)
+                recommend_product = Product.objects.filter(category=category, color=color)
                 print(list(recommend_product.values()))
                 recommend_list.append(list(recommend_product.values()))
-            
-        
+
         return JsonResponse({'recommend_list': recommend_list})
+
 
 class LikeProductView(generics.ListAPIView):
     '''
@@ -71,7 +72,7 @@ class LikeProductView(generics.ListAPIView):
     ex)
         "post_id" : 5352
     return : message
-    
+
     -get 요청시
     jwt 토큰에 있는 유저정보 값으로 likeproduct 출력 api
     return : likeproduct list 출력
@@ -95,8 +96,7 @@ class LikeProductView(generics.ListAPIView):
         delete_product.delete()
         return HttpResponse({'message': 'DELETE_LIKE_PRODUCT'}, status=200)
 
-
     def get(self, request, format=None):
-        queryset =LikeProduct.objects.filter(user_id=request.user.pk)
+        queryset = LikeProduct.objects.filter(user_id=request.user.pk)
         serializer = LikeSerializer(queryset, many=True)
         return Response(serializer.data)
