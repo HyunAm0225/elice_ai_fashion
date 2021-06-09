@@ -1,7 +1,5 @@
-import random
 import json
 from .models import Product, LikeProduct
-from style.models import Style
 from .serializers import ProductSerializer, LikeSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -29,29 +27,55 @@ class ProductView(generics.ListAPIView):
 
 
 class RecommendView(generics.ListAPIView):
+    '''
+    상품의 feature와 color을 받아 그와 맞는 상품을 출력해주는 api
+    body : list안에 상품마다 feature,color를 딕셔너리 형태로 보내줌
+    ex)
+        [
+            {
+                "shorts" : "pink",
+                "long sleeve outwear" : "yellow"
+            },
+            {
+                "long sleeve dress" : "yellow"
+            }
+        ]
+    return : feature,color값에 대한 Product 정보
+    '''
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [
         AllowAny
     ]
     pagination_class = CustomResultsSetPagination
-    filter_backends = (filters.DjangoFilterBackend,) 
-    filter_fields = ('category',)
 
     def get(self, request):
         recommend_list = []
         request = (json.loads(request.body))
-        for i in request['styles']:
-            style = list(Style.objects.filter(id=i).values_list())[0][2]
+        print(request)
+        for style in request:
             for category, color in style.items():
-                recommend_list.append(list(Product.objects.filter(category=category,color=color).values()))
+                print(category,color)
+                recommend_product = Product.objects.filter(category = category, color = color)
+                print(list(recommend_product.values()))
+                recommend_list.append(list(recommend_product.values()))
+            
         
         return JsonResponse({'recommend_list': recommend_list})
 
-
-
-
 class LikeProductView(generics.ListAPIView):
+    '''
+    - post 요청시
+    상품의 좋아요 상태를 추가,삭제하는 api
+    body : 좋아요 할 post_id ()
+    ex)
+        "post_id" : 5352
+    return : message
+    
+    -get 요청시
+    jwt 토큰에 있는 유저정보 값으로 likeproduct 출력 api
+    return : likeproduct list 출력
+    '''
     model = LikeProduct
     serializer_class = LikeSerializer
     permission_classes = [
