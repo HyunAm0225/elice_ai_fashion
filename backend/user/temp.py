@@ -8,37 +8,34 @@ import matplotlib.pyplot as plt
 
 # color boundaries
 LOWER_HSV = {
-    'red': np.array([0, 100, 20], np.uint8),
-    "orange": np.array([10, 100, 20], np.uint8),
+    'red': np.array([145, 100, 20], np.uint8),
+    "orange": np.array([10, 100, 100], np.uint8),
     'yellow': np.array([17, 100, 20], np.uint8),
     'green': np.array([60, 100, 20], np.uint8),
     'blue': np.array([90, 100, 20], np.uint8),
     "navy": np.array([110, 100, 20], np.uint8),
     "purple": np.array([125, 100, 20], np.uint8),
-    "pink": np.array([135, 100, 20], np.uint8),
-
+    "pink": np.array([0, 70, 20], np.uint8),
     "black": np.array([0, 0, 0], np.uint8),
-    "white": np.array([0, 30, 200], np.uint8),
-    "grey": np.array([0, 0, 0], np.uint8),
-    "beige": np.array([0, 0, 0], np.uint8),
-    "brown": np.array([0, 0, 0], np.uint8),
+    "white": np.array([0, 0, 50], np.uint8),
+    "grey": np.array([0, 0, 150], np.uint8),
+    "brown": np.array([10, 100, 20], np.uint8),
+
 }
 
 UPPER_HSV = {
-    'red': np.array([10, 255, 255], np.uint8),
+    'red': np.array([180, 255, 255], np.uint8),
     "orange": np.array([20, 255, 255], np.uint8),
     'yellow': np.array([35, 255, 255], np.uint8),
     'green': np.array([90, 255, 255], np.uint8),
     'blue': np.array([110, 255, 255], np.uint8),
     "navy": np.array([125, 255, 255], np.uint8),
     "purple": np.array([135, 255, 255], np.uint8),
-    "pink": np.array([170, 255, 255], np.uint8),
-
-    "black": np.array([180, 30, 30], np.uint8),
-    "white": np.array([0, 30, 200], np.uint8),
-    "grey": np.array([0, 0, 0], np.uint8),
-    "beige": np.array([0, 0, 0], np.uint8),
-    "brown": np.array([0, 0, 0], np.uint8)
+    "pink": np.array([6, 255, 250], np.uint8),
+    "black": np.array([180, 60, 100], np.uint8),
+    "white": np.array([180, 40, 177], np.uint8),
+    "grey": np.array([40, 30, 190], np.uint8),
+    "brown": np.array([20, 255, 200], np.uint8)
 }
 
 
@@ -97,13 +94,12 @@ def detect_color(image, leftup=None, rightdown=None):
     orange_area = calculate_area(image, image_area, 'orange')
     black_area = calculate_area(image, image_area, 'black')
     grey_area = calculate_area(image, image_area, 'grey')
-    beige_area = calculate_area(image, image_area, 'beige')
     brown_area = calculate_area(image, image_area, 'brown')
     navy_area = calculate_area(image, image_area, 'navy')
     purple_area = calculate_area(image, image_area, 'purple')
     pink_area = calculate_area(image, image_area, 'pink')
 
-    areas = {'white': white_area, 'grey': grey_area, 'black': black_area, 'beige': beige_area, 'brown': brown_area,
+    areas = {'white': white_area, 'grey': grey_area, 'black': black_area, 'brown': brown_area,
              'blue': blue_area, 'navy': navy_area, 'purple': purple_area, 'green': green_area, 'red': red_area,
              'orange': orange_area, 'yellow': yellow_area, 'pink': pink_area}
 
