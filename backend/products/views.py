@@ -50,7 +50,7 @@ class RecommendView(generics.ListAPIView):
     ]
     pagination_class = CustomResultsSetPagination
 
-    def get(self, request):
+    def post(self, request):
         recommend_list = []
         request = (json.loads(request.body))
         print(request)
