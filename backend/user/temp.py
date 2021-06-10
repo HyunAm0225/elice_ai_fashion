@@ -17,10 +17,9 @@ LOWER_HSV = {
     "purple": np.array([125, 100, 20], np.uint8),
     "pink": np.array([0, 70, 20], np.uint8),
     "black": np.array([0, 0, 0], np.uint8),
-    "white": np.array([0, 0, 50], np.uint8),
+    "white": np.array([0, 0, 80], np.uint8),
     "grey": np.array([0, 0, 150], np.uint8),
     "brown": np.array([10, 100, 20], np.uint8),
-
 }
 
 UPPER_HSV = {
@@ -32,9 +31,9 @@ UPPER_HSV = {
     "navy": np.array([125, 255, 255], np.uint8),
     "purple": np.array([135, 255, 255], np.uint8),
     "pink": np.array([6, 255, 250], np.uint8),
-    "black": np.array([180, 60, 100], np.uint8),
-    "white": np.array([180, 40, 177], np.uint8),
-    "grey": np.array([40, 30, 190], np.uint8),
+    "black": np.array([180, 60, 80], np.uint8),
+    "white": np.array([120, 40, 177], np.uint8),
+    "grey": np.array([40, 30, 170], np.uint8),
     "brown": np.array([20, 255, 200], np.uint8)
 }
 

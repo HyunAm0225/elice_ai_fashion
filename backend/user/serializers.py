@@ -8,7 +8,7 @@ from .models import Closet
 from user.temp import get_feature as get_fe
 from user.temp import yolo_init
 from django.conf import settings
-
+import numpy as np
 
 import json
 
@@ -50,6 +50,8 @@ class ClosetSerializer(serializers.ModelSerializer):
     def get_feature(self, style):
         yolo_net, YOLO_LABELS = yolo_init()
         image = f"{settings.BASE_DIR}{style.dress_img.url}"
+        print(image)
+        np.fromfile(image, np.uint8)
         feature = get_fe(yolo_net, image, YOLO_LABELS)
         return feature
 
