@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Product, LikeProduct
+from django.utils.html import format_html
 
 
 class LikeInline(admin.TabularInline):
@@ -8,7 +9,11 @@ class LikeInline(admin.TabularInline):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'brand', 'category', 'discount_rate')
+    def product_cover_thumbnail(self, obj):
+        return format_html('<img src="{}" width="50px;"/>'.format(obj.thumnail))
+    product_cover_thumbnail.short_description = "Thumbnail"
+    list_display = ('id', 'name', 'brand', 'product_cover_thumbnail', 'category', 'color', 'discount_rate')
+
     search_fields = ['name']
     inlines = (LikeInline,)
 
