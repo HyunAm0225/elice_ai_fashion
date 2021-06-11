@@ -73,4 +73,4 @@ class ClosetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Closet
-        fields = ['user_id', 'dress_img', 'feature']
+        fields = ['pk', 'user_id', 'dress_img', 'feature']
