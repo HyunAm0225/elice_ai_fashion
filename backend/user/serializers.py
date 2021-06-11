@@ -11,12 +11,14 @@ from django.conf import settings
 import numpy as np
 
 import json
+from rest_framework.exceptions import ValidationError
 
 
 User = get_user_model()
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
+    pk = serializers.IntegerField(read_only=True)
     email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all(), message="이미 존재하는 아이디 입니다.")])
     password = serializers.CharField(
         write_only=True, style={'input_type': 'password', 'placeholder': 'Password'}, validators=[validate_password])
@@ -39,13 +41,20 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'username', 'token')
+        fields = ('pk', 'email', 'password', 'username', 'token')
 
 
 class ClosetSerializer(serializers.ModelSerializer):
     # image = serializers.ImageField(use_url=True)
     # feature = serializers.SerializerMethodField()
     feature = serializers.JSONField(read_only=True)
+
+    def validate_image(self, image):
+        MAX_UPLOAD_SIZE = 12000000
+        print(image.name)
+        if image.size > MAX_UPLOAD_SIZE:
+            print(image.size)
+            raise ValidationError("File size too big!")
 
     def get_feature(self, style):
         yolo_net, YOLO_LABELS = yolo_init()
